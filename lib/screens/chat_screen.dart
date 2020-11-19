@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/models/message_model.dart';
 import 'package:flutter_chat_app/models/user_model.dart';
+import 'package:flutter_chat_app/database.dart';
 
+var sendermob,messages;
 class ChatScreen extends StatefulWidget {
-  final User user;
+  final sender_mob;
 
-  ChatScreen({this.user});
+  ChatScreen(this.sender_mob){
+    sendermob = sender_mob;
+  }
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
+
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  _chatBubble(Message message, bool isMe, bool isSameUser) {
+  @override
+  void initState(){
+    initchat();
+  }
+  void initchat() async{
+    var ttmp = await UserRepo().FetchChat("1234", "12345");
+    setState(() {
+      messages = ttmp;
+      print("async called");
+    });
+  }
+  _chatBubble(Message message, bool isMe) {
     if (isMe) {
       return Column(
         children: <Widget>[
@@ -43,41 +59,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          !isSameUser
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      message.time,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black45,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(message.sender.imageUrl),
-                      ),
-                    ),
-                  ],
-                )
-              : Container(
-                  child: null,
-                ),
         ],
       );
     } else {
@@ -110,40 +91,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          !isSameUser
-              ? Row(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(message.sender.imageUrl),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      message.time,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black45,
-                      ),
-                    ),
-                  ],
-                )
-              : Container(
-                  child: null,
-                ),
         ],
       );
     }
@@ -184,6 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     int prevUserId;
+    //messages = await UserRepo().FetchChat("1234", "12345");
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
       appBar: AppBar(
@@ -194,28 +142,12 @@ class _ChatScreenState extends State<ChatScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                  text: widget.user.name,
+                  text: User.dic_mob[sendermob],
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   )),
               TextSpan(text: '\n'),
-              widget.user.isOnline ?
-              TextSpan(
-                text: 'Online',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-              :
-              TextSpan(
-                text: 'Offline',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
             ],
           ),
         ),
@@ -226,25 +158,25 @@ class _ChatScreenState extends State<ChatScreen> {
               Navigator.pop(context);
             }),
       ),
-      body: Column(
+      body: messages != null ?
+      Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
+            child:
+              ListView.builder(
               reverse: true,
               padding: EdgeInsets.all(20),
               itemCount: messages.length,
               itemBuilder: (BuildContext context, int index) {
                 final Message message = messages[index];
-                final bool isMe = message.sender.id == currentUser.id;
-                final bool isSameUser = prevUserId == message.sender.id;
-                prevUserId = message.sender.id;
-                return _chatBubble(message, isMe, isSameUser);
+                final bool isMe = message.sender == "u1";
+                return _chatBubble(message, isMe);
               },
             ),
           ),
           _sendMessageArea(),
         ],
-      ),
+      ) : Center(child: const CircularProgressIndicator()),
     );
   }
 }
