@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/models/message_model.dart';
 import 'package:flutter_chat_app/models/user_model.dart';
 import 'package:flutter_chat_app/database.dart';
+import 'package:flutter_chat_app/models/curuser.dart';
 
 var sendermob,messages;
 class ChatScreen extends StatefulWidget {
   final sender_mob;
-
   ChatScreen(this.sender_mob){
     sendermob = sender_mob;
   }
@@ -17,22 +17,35 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  UserRepo dbmethod = new UserRepo();
+  CurUser currentUser = new CurUser();
+  Stream chatstream;
   @override
   void initState(){
     initchat();
   }
   void initchat() async{
-    var ttmp = await UserRepo().FetchChat("1234", "12345");
-    setState(() {
-      messages = ttmp;
-      print("async called");
+    //var ttmp = await UserRepo().FetchChat("1234", "12345");
+    dbmethod.getChat(currentUser.mob,currentUser.mob2).then((value){
+      setState(() {
+        print("getchat chatstream");
+        chatstream = value;
+        print(chatstream.toString());
+      });
     });
+    // setState(() {
+    //   messages = ttmp;
+    //   print("async called");
+    // });
   }
-  _chatBubble(Message message, bool isMe) {
+
+
+  _chatBubble(String message, bool isMe) {
     if (isMe) {
       return Column(
         children: <Widget>[
           Container(
+            key: UniqueKey(),
             alignment: Alignment.topRight,
             child: Container(
               constraints: BoxConstraints(
@@ -52,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
               child: Text(
-                message.text,
+                message,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -84,7 +97,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
               child: Text(
-                message.text,
+                message,
                 style: TextStyle(
                   color: Colors.black54,
                 ),
@@ -97,6 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _sendMessageArea() {
+    final cur_text = TextEditingController();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8),
       height: 70,
@@ -111,6 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           Expanded(
             child: TextField(
+              controller: cur_text,
               decoration: InputDecoration.collapsed(
                 hintText: 'Send a message..',
               ),
@@ -121,7 +136,12 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: Icon(Icons.send),
             iconSize: 25,
             color: Theme.of(context).primaryColor,
-            onPressed: () {},
+            onPressed: () async {
+              String cur_msg = cur_text.text;
+              print(cur_msg);
+              await UserRepo().AddChat(currentUser.mob, currentUser.mob2,cur_msg);
+              cur_text.clear();
+            },
           ),
         ],
       ),
@@ -130,8 +150,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int prevUserId;
-    //messages = await UserRepo().FetchChat("1234", "12345");
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
       appBar: AppBar(
@@ -158,25 +176,33 @@ class _ChatScreenState extends State<ChatScreen> {
               Navigator.pop(context);
             }),
       ),
-      body: messages != null ?
+      body:
       Column(
         children: <Widget>[
           Expanded(
             child:
-              ListView.builder(
-              reverse: true,
-              padding: EdgeInsets.all(20),
-              itemCount: messages.length,
-              itemBuilder: (BuildContext context, int index) {
-                final Message message = messages[index];
-                final bool isMe = message.sender == "u1";
-                return _chatBubble(message, isMe);
-              },
-            ),
+            StreamBuilder(
+          stream: chatstream,
+          builder: (context,snapshot){
+                return snapshot.hasData?ListView.builder(
+                  reverse: true,
+                  padding: EdgeInsets.all(20),
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final String message = snapshot.data.documents[index]["msg"];
+                    final bool isMe = snapshot.data.documents[index]["user"] == "u1";
+                    print(message);
+                    print("inside builder");
+                    return _chatBubble(message, isMe);
+                  },
+                ):Center(child: const CircularProgressIndicator());
+        },
+      ),
+
           ),
           _sendMessageArea(),
         ],
-      ) : Center(child: const CircularProgressIndicator()),
+      )
     );
   }
 }
