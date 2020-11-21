@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/screens/ContactFetch.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+//TODO: For now not Touch this file
+
 class SeeContactsButton extends StatelessWidget {
   Future _getThingsOnStartup() async {
     await Future.delayed(Duration(seconds: 2));

@@ -1,17 +1,18 @@
 import 'package:flutter_chat_app/models/user_model.dart';
 
 class Message {
-  final String sender;
+  final bool isMe;
   final String text;
-
+  final String time;
 
   Message({
-    this.sender,
+    this.isMe,
     this.text,
-
+    this.time
   });
-}
-List<Message> chats;
-setMsgLst(List<Message> temp){
-  chats = temp;
+
+  @override
+  String toString() {
+    return 'Message { isMe: $isMe, text: $text, time: $time }';
+  }
 }

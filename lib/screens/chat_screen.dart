@@ -3,12 +3,12 @@ import 'package:flutter_chat_app/models/message_model.dart';
 import 'package:flutter_chat_app/models/user_model.dart';
 import 'package:flutter_chat_app/database.dart';
 import 'package:flutter_chat_app/models/curuser.dart';
-
-var sendermob,messages;
+import 'package:intl/intl.dart';
+var senderMob,messages;
 class ChatScreen extends StatefulWidget {
   final sender_mob;
   ChatScreen(this.sender_mob){
-    sendermob = sender_mob;
+    senderMob = sender_mob;
   }
 
   @override
@@ -25,23 +25,17 @@ class _ChatScreenState extends State<ChatScreen> {
     initchat();
   }
   void initchat() async{
-    //var ttmp = await UserRepo().FetchChat("1234", "12345");
     dbmethod.getChat(currentUser.mob,currentUser.mob2).then((value){
       setState(() {
-        print("getchat chatstream");
+        print("get chat chatstream");
         chatstream = value;
         print(chatstream.toString());
       });
     });
-    // setState(() {
-    //   messages = ttmp;
-    //   print("async called");
-    // });
   }
 
-
-  _chatBubble(String message, bool isMe) {
-    if (isMe) {
+  _chatBubble(Message msg_obj,bool isSameUser) {
+    if (msg_obj.isMe) {
       return Column(
         children: <Widget>[
           Container(
@@ -65,13 +59,27 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
               child: Text(
-                message,
+                msg_obj.text,
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
             ),
           ),
+          !isSameUser
+          ?Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                msg_obj.time,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black45,
+                ),
+              ),
+            ],
+          )
+              :Container(),
         ],
       );
     } else {
@@ -97,13 +105,26 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
               child: Text(
-                message,
+                msg_obj.text,
                 style: TextStyle(
                   color: Colors.black54,
                 ),
               ),
             ),
           ),
+          !isSameUser
+              ?Row(
+              children: <Widget>[
+              Text(
+                msg_obj.time,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black45,
+                ),
+              ),
+            ],
+          )
+              :Container(),
         ],
       );
     }
@@ -137,10 +158,13 @@ class _ChatScreenState extends State<ChatScreen> {
             iconSize: 25,
             color: Theme.of(context).primaryColor,
             onPressed: () async {
-              String cur_msg = cur_text.text;
-              print(cur_msg);
-              await UserRepo().AddChat(currentUser.mob, currentUser.mob2,cur_msg);
-              cur_text.clear();
+              String cur_msg = cur_text.text.trim();
+              if(cur_msg!="") {
+                print(cur_msg);
+                await dbmethod.addChat(
+                    currentUser.mob, currentUser.mob2, cur_msg);
+                cur_text.clear();
+              }
             },
           ),
         ],
@@ -150,25 +174,30 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String prev_user;
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
       appBar: AppBar(
         brightness: Brightness.dark,
         centerTitle: true,
-        title: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            children: [
-              TextSpan(
-                  text: User.dic_mob[sendermob],
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  )),
-              TextSpan(text: '\n'),
-            ],
-          ),
+        title: Row(
+          children: <Widget>[
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                      text: User.dic_mob[senderMob],
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      )),
+                ],
+              ),
+            ),
+          ],
         ),
+
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white,
@@ -190,10 +219,16 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (BuildContext context, int index) {
                     final String message = snapshot.data.documents[index]["msg"];
-                    final bool isMe = snapshot.data.documents[index]["user"] == "u1";
-                    print(message);
-                    print("inside builder");
-                    return _chatBubble(message, isMe);
+                    final String cur_user = snapshot.data.documents[index]["user"];
+                    var timestamp = snapshot.data.documents[index]["createdAt"];
+
+                    final bool isMe =  cur_user == "u1";
+                    final bool isSameUser = prev_user==cur_user;
+                    prev_user = cur_user;
+                    final String time = DateFormat.jm().format(timestamp.toDate());
+                    Message msg_obj = new Message(isMe: isMe,text: message,time: time);
+                    print(msg_obj);
+                    return _chatBubble(msg_obj,isSameUser);
                   },
                 ):Center(child: const CircularProgressIndicator());
         },

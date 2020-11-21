@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/screens/Contact.dart';
 import 'package:flutter_chat_app/screens/ContactFetch.dart';
-import './screens/home_screen.dart';
-import 'package:flutter_chat_app/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async{
   runApp(MyApp());

@@ -9,27 +9,23 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   var _contacts;
-
+  final UserRepo dbmethode = new UserRepo();
   @override
   void initState() {
     getContacts();
-    // UserRepo().FetchChat("1234", "12345");
     super.initState();
   }
 
   Future<void> getContacts() async {
-    //Make sure we already have permissions for contacts when we get to this
-    //page, so we can just retrieve it
     final Iterable<Contact> contacts = await ContactsService.getContacts();
-    var mob_lst = new List();
+    var mobLst = new List();
     for(var e in contacts){
       String mob = e.phones.toList()[0].value.replaceAll(new RegExp(r'\D'), "");
-      mob_lst.add(mob);
-      print(mob);
+      mobLst.add(mob);
     }
-    var UserContact = await UserRepo().getMob(mob_lst);
+    var userContact = await dbmethode.getMob(mobLst);
     setState(() {
-      _contacts = UserContact;
+      _contacts = userContact;
     });
   }
 
@@ -40,8 +36,6 @@ class _ContactsPageState extends State<ContactsPage> {
         title: (Text('All Chats')),
       ),
       body: _contacts != null
-      //Build a list view of all contacts, displaying their avatar and
-      // display name
           ?
       ListView.builder(
         itemCount: _contacts?.length ?? 0,
@@ -59,17 +53,22 @@ class _ContactsPageState extends State<ContactsPage> {
             contentPadding:
             const EdgeInsets.symmetric(vertical: 2, horizontal: 18),
             leading:  CircleAvatar(
-              child: Text(contact['name'][0]),
+              child: Text(capitalize(contact['name'][0])),
               backgroundColor: Theme.of(context).accentColor,
             ),
-            title: Text(contact['name'] ?? ''),
-            //This can be further expanded to showing contacts detail
-            // onPressed().
+            title: Text(capitalize(contact['name']) ?? ''),
           ),
           );
         },
       )
           : Center(child: const CircularProgressIndicator()),
     );
+  }
+
+  String capitalize(String str) {
+    if (str.length<2){
+      return str.toUpperCase();
+    }
+    return str.split(" ").map((st) => st[0].toUpperCase()+st.substring(1)).join(" ");
   }
 }
