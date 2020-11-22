@@ -3,8 +3,11 @@ import 'package:flutter_chat_app/models/message_model.dart';
 import 'package:flutter_chat_app/models/user_model.dart';
 import 'package:flutter_chat_app/database.dart';
 import 'package:flutter_chat_app/models/curuser.dart';
+import 'package:flutter_chat_app/screens/setting.dart';
 import 'package:intl/intl.dart';
+import 'package:translator/translator.dart';
 var senderMob,messages;
+final translator = GoogleTranslator();
 class ChatScreen extends StatefulWidget {
   final sender_mob;
   ChatScreen(this.sender_mob){
@@ -18,14 +21,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   UserRepo dbmethod = new UserRepo();
-  CurUser currentUser = new CurUser();
   Stream chatstream;
   @override
   void initState(){
     initchat();
   }
   void initchat() async{
-    dbmethod.getChat(currentUser.mob,currentUser.mob2).then((value){
+    dbmethod.getChat(CurUser.mob,CurUser.mob2).then((value){
       setState(() {
         print("get chat chatstream");
         chatstream = value;
@@ -34,38 +36,38 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  _chatBubble(Message msg_obj,bool isSameUser) {
+  _chatBubble(Message msg_obj,bool isSameUser,BuildContext context) {
     if (msg_obj.isMe) {
       return Column(
         children: <Widget>[
           Container(
-            key: UniqueKey(),
-            alignment: Alignment.topRight,
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.80,
-              ),
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
+              key: UniqueKey(),
+              alignment: Alignment.topRight,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.80,
+                ),
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Text(
+                  msg_obj.text,
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                ],
-              ),
-              child: Text(
-                msg_obj.text,
-                style: TextStyle(
-                  color: Colors.white,
                 ),
               ),
             ),
-          ),
           !isSameUser
           ?Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -85,9 +87,30 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       return Column(
         children: <Widget>[
-          Container(
+      GestureDetector(
+        key: UniqueKey(),
+        onTap: () async {
+          //String trans_txt = await msg_obj.translate(to: 'en').toString();
+          translator
+              .translate(msg_obj.text, to: CurUser.lang).then((res){
+              final bar = SnackBar(content: Text(res.toString()),
+              duration: Duration(seconds: 5),
+                action: SnackBarAction(
+                label: "Hide",
+                onPressed: (){
+
+                },
+              ),);
+            Scaffold.of(context).showSnackBar(bar);
+          });
+
+        print(msg_obj);
+        },
+        child:
+            Container(
             alignment: Alignment.topLeft,
-            child: Container(
+            child:
+              Container(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.80,
               ),
@@ -104,12 +127,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ],
               ),
-              child: Text(
+                child: Text(
                 msg_obj.text,
                 style: TextStyle(
                   color: Colors.black54,
                 ),
               ),
+            ),
             ),
           ),
           !isSameUser
@@ -162,7 +186,7 @@ class _ChatScreenState extends State<ChatScreen> {
               if(cur_msg!="") {
                 print(cur_msg);
                 await dbmethod.addChat(
-                    currentUser.mob, currentUser.mob2, cur_msg);
+                    CurUser.mob, CurUser.mob2, cur_msg);
                 cur_text.clear();
               }
             },
@@ -204,6 +228,15 @@ class _ChatScreenState extends State<ChatScreen> {
             onPressed: () {
               Navigator.pop(context);
             }),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            color: Colors.white,
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Setting()));
+            },
+          )
+        ],
       ),
       body:
       Column(
@@ -228,7 +261,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     final String time = DateFormat.jm().format(timestamp.toDate());
                     Message msg_obj = new Message(isMe: isMe,text: message,time: time);
                     print(msg_obj);
-                    return _chatBubble(msg_obj,isSameUser);
+                    return _chatBubble(msg_obj,isSameUser,context);
                   },
                 ):Center(child: const CircularProgressIndicator());
         },

@@ -40,6 +40,8 @@ dev_dependencies:
   cloud_firestore: ^0.12.9+5
   firebase_analytics: ^5.0.2
   intl: ^0.16.1
+  translator: ^0.1.5
+  dropdownfield: 1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
