@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_chat_app/database.dart';
 import 'package:flutter_chat_app/screens/chat_screen.dart';
+import 'package:flutter_chat_app/screens/profile.dart';
 import 'package:flutter_chat_app/screens/setting.dart';
+import 'package:popup_menu/popup_menu.dart';
 class ContactsPage extends StatefulWidget {
   @override
   _ContactsPageState createState() => _ContactsPageState();
@@ -34,15 +36,24 @@ class _ContactsPageState extends State<ContactsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (Text('All Chats')),
+        title: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                  text: "All Chats",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                  )),
+            ],
+          ),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: _simplePopup(),
             color: Colors.white,
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Setting()));
-            },
-          )
+          ),
         ],
       ),
       body: _contacts != null
@@ -74,6 +85,38 @@ class _ContactsPageState extends State<ContactsPage> {
           : Center(child: const CircularProgressIndicator()),
     );
   }
+
+  Widget _simplePopup() => PopupMenuButton<int>(
+    icon: Icon(Icons.more_vert,color: Colors.white,),
+    itemBuilder: (context) => [
+      PopupMenuItem(
+        value: 1,
+        child: GestureDetector(
+          child: Row(
+            children: <Widget>[
+              Text("Profile"),
+            ],
+          ),
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Profile()));
+          },
+        ),
+      ),
+      PopupMenuItem(
+        value: 2,
+        child: GestureDetector(
+          child: Row(
+            children: <Widget>[
+              Text("Settings"),
+            ],
+          ),
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Setting()));
+          },
+        ),
+      ),
+    ],
+  );
 
   String capitalize(String str) {
     if (str.length<2){

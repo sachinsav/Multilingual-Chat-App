@@ -51,7 +51,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 margin: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),bottomLeft: Radius.circular(15)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -118,7 +119,8 @@ class _ChatScreenState extends State<ChatScreen> {
               margin: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.only(topRight: Radius.circular(15), 
+                    bottomRight: Radius.circular(15),bottomLeft: Radius.circular(15)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
