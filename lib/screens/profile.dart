@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/models/curuser.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return ProfileScreen();
+  }
+}
+
+class ProfileScreen extends State<Profile>{
+  bool _status = true;
+  String btn_txt = "Edit";
+  var nameTxt = TextEditingController();
+  var mobTxt = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    nameTxt.text = CurUser.name;
+    mobTxt.text = CurUser.mob;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +51,10 @@ class Profile extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: Column(
+      body: ListView(
+        children: <Widget>[
+
+        Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
@@ -80,20 +102,119 @@ class Profile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Parsonal Information',
+                  'Personal Information',
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 15.0,),
-                Text(
-                  'Name',
-                  style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
-                )
+                Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child:
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 25.0,),
+                          Text(
+                            'Name',
+                            style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 2.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  new Flexible(
+                                    child: new TextField(
+                                      controller: nameTxt,
+                                      decoration: const InputDecoration(
+                                        hintText: "Enter Your Name",
+                                      ),
+                                      enabled: !_status,
+                                      autofocus: !_status,
+
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          SizedBox(height: 25.0,),
+                          Text(
+                            'Mobile Number',
+                            style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 2.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  new Flexible(
+                                    child: new TextField(
+                                      controller: mobTxt,
+                                      decoration: const InputDecoration(
+                                        hintText: "Enter Your Mobile Number",
+                                      ),
+                                      enabled: false,
+                                      autofocus: false,
+
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),),
+                _getActionButtons(),
               ],
             ),
           )
 
         ],
       ),
+        ],
+      )
     );
+  }
+
+  Widget _getActionButtons() {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      child: new Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: 70.0,left: 70.0),
+              child: Container(
+                  child: new RaisedButton(
+                    child: new Text(btn_txt),
+                    textColor: Colors.white,
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      setState(() {
+                        if(_status){
+                        _status = false;
+                        btn_txt = "Save";
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        }
+                        else{
+                          _status = true;
+                          btn_txt = "Edit";
+                          CurUser.name = nameTxt.text;
+                          addTofb(nameTxt.text);
+                        }
+                      });
+                    },
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(20.0)),
+                  )),
+            ),
+            flex: 2,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void addTofb(String text) {
+    //TODO: add name to firebase
   }
 }
