@@ -8,10 +8,10 @@ This is a Flutter application built to remove linguistic barriers while chatting
 
 All Chats Page | Profile Page
 :---------:|:-----------:
-![](./github_image/home.png)|![](./github_image/profile.png)
+![](./github_images/home.png)|![](./github_image/profile.png)
 
 ---
 
 Setting Page | Chat Page
 :---------:|:-----------:
-![](./github_image/setting.png)|![](./github_image/chat.png)
+![](./github_images/setting.png)|![](./github_image/chat.png)
