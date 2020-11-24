@@ -95,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
           translator
               .translate(msg_obj.text, to: CurUser.lang).then((res){
               final bar = SnackBar(content: Text(res.toString()),
-              duration: Duration(seconds: 5),
+              duration: Duration(seconds: 15),
                 action: SnackBarAction(
                 label: "Hide",
                 onPressed: (){
