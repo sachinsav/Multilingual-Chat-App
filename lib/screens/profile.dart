@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/models/curuser.dart';
-
+import 'package:flutter_chat_app/models/user_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_chat_app/database.dart';
 class Profile extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -9,7 +13,11 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileScreen extends State<Profile>{
-  bool _status = true;
+  File imageFile;
+  dynamic ppic = AssetImage('assets/images/profilePic.jpg');
+  final picker = ImagePicker();
+  UserRepo dbmethod = new UserRepo();
+  bool _status = true,camera_status= false;
   String btn_txt = "Edit";
   var nameTxt = TextEditingController();
   var mobTxt = TextEditingController();
@@ -70,7 +78,7 @@ class ProfileScreen extends State<Profile>{
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new ExactAssetImage('assets/images/hulk.jpg'),
+                          image: CurUser.pic==" "?ppic:NetworkImage(CurUser.pic),
                           fit: BoxFit.cover,
                         ),
                       )),
@@ -84,9 +92,17 @@ class ProfileScreen extends State<Profile>{
                       new CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColor,
                         radius: 25.0,
-                        child: new Icon(
-                          Icons.camera_alt,
+                        child: IconButton(
+                          icon : Icon(Icons.camera_alt),
                           color: Colors.white,
+
+                          onPressed: (){
+                            //gallery
+                            if(camera_status) {
+                              _showSelectionDialog(context);
+                            }
+
+                          },
                         ),
                       )
                     ],
@@ -188,20 +204,58 @@ class ProfileScreen extends State<Profile>{
                     child: new Text(btn_txt),
                     textColor: Colors.white,
                     color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      setState(() {
-                        if(_status){
-                        _status = false;
-                        btn_txt = "Save";
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                        }
-                        else{
+                    onPressed: () async {
+                      if(_status){
+                        setState(() {
+                          _status = false;
+                          btn_txt = "Save";
+                          camera_status = true;
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                        });
+                      }
+                      else{
+                        setState(() {
                           _status = true;
                           btn_txt = "Edit";
+                          camera_status = false;
                           CurUser.name = nameTxt.text;
-                          addTofb(nameTxt.text);
-                        }
-                      });
+
+                        });
+                          if(imageFile!=null){
+                            String imageUrl = await dbmethod.uploadFile(imageFile,path: "ProfilePic");
+                            dbmethod.addUser(nameTxt.text, mobTxt.text,pic: imageUrl);
+                            setState(() {
+                              CurUser.pic = imageUrl;
+                              print("setState");
+                              print(CurUser.pic);
+                            });
+
+                            imageFile = null;
+                          }
+                          else{
+                            dbmethod.addUser(nameTxt.text, mobTxt.text);
+                          }
+                      }
+                      // setState(() async {
+                      //   if(_status){
+                      //   _status = false;
+                      //   btn_txt = "Save";
+                      //   FocusScope.of(context).requestFocus(new FocusNode());
+                      //   }
+                      //   else{
+                      //     _status = true;
+                      //     btn_txt = "Edit";
+                      //     CurUser.name = nameTxt.text;
+                      //     if(imageFile!=null){
+                      //       String imageUrl = await dbmethod.uploadFile(imageFile,path: "ProfilePic");
+                      //       dbmethod.addUser(nameTxt.text, mobTxt.text,pic: imageFile);
+                      //       imageFile = null;
+                      //     }
+                      //     else{
+                      //       dbmethod.addUser(nameTxt.text, mobTxt.text);
+                      //     }
+                      //   }
+                      // });
                     },
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0)),
@@ -216,5 +270,55 @@ class ProfileScreen extends State<Profile>{
 
   void addTofb(String text) {
     //TODO: add name to firebase
+  }
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("From where do you want to take the photo?"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Gallery"),
+                      onTap: () {
+                        _openGallery(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("Camera"),
+                      onTap: () {
+                        _openCamera(context);
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+  void _openGallery(BuildContext context) async {
+    final picture = await picker.getImage(source: ImageSource.gallery);
+    this.setState(() {
+      if (picture!=null) {
+        imageFile = File(picture.path);
+      }
+    });
+    Navigator.of(context).pop(true);
+
+  }
+
+  void _openCamera(BuildContext context) async {
+    final picture = await picker.getImage(source:ImageSource.camera);
+    this.setState(() {
+      if (picture!=null) {
+        imageFile = File(picture.path);
+        print(imageFile.toString());
+        ppic = FileImage(imageFile);
+      }
+    });
+    Navigator.of(context).pop(true);
+
   }
 }

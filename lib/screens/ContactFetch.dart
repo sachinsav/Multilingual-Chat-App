@@ -4,6 +4,7 @@ import 'package:flutter_chat_app/database.dart';
 import 'package:flutter_chat_app/screens/chat_screen.dart';
 import 'package:flutter_chat_app/screens/profile.dart';
 import 'package:flutter_chat_app/screens/setting.dart';
+import 'package:flutter_chat_app/screens/notification.dart';
 import 'package:popup_menu/popup_menu.dart';
 class ContactsPage extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   Future<void> getContacts() async {
     final Iterable<Contact> contacts = await ContactsService.getContacts();
+    await FbNotification().initialise();
     var mobLst = new List();
     for(var e in contacts){
       String mob = e.phones.toList()[0].value.replaceAll(new RegExp(r'\D'), "");

@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_chat_app/models/curuser.dart';
 import 'package:flutter_chat_app/models/user_model.dart';
 class UserRepo {
 
@@ -8,22 +11,30 @@ class UserRepo {
         .orderBy('createdAt',descending: true).snapshots();
   }
 
-  Future<void> addChat(String cur,String sender,String text) async{
+  Future<void> addChat(String cur,String sender,String text,{String type="text"}) async{
     await Firestore.instance.collection("Chats").document(cur).collection(sender)
         .add({
         "user":"u1",
         "msg": text,
-        "createdAt":Timestamp.now()
+        "createdAt":Timestamp.now(),
+        "type":type
         });
     await Firestore.instance.collection("Chats").document(sender).collection(cur)
         .add({
       "user":"u2",
       "msg": text,
-      "createdAt":Timestamp.now()
+      "createdAt":Timestamp.now(),
+      "type":type
     });
   }
+  Future<String> uploadFile(File _image,{path = "Chats"}) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    StorageReference ref = storage.ref().child(path).child("image" + DateTime.now().toString());
+    StorageUploadTask uploadTask = ref.putFile(_image);
+    return await (await uploadTask.onComplete).ref.getDownloadURL();
+  }
 
-  Future<void> addUser(String fullName, String mob) async{
+  Future<void> addUser(String fullName, String mob,{pic = " "}) async{
     //TODO: user Id has to add here
     final uid = "uid1234";
     print("add user called");
@@ -32,8 +43,10 @@ class UserRepo {
         .setData({
           "name": fullName,
           "mob": mob,
+          "pic": pic==" "?CurUser.pic:pic
         });
   }
+
 
   Future<List> getMob(var mobLst) async{
     var dic = {};
