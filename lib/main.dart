@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/screens/ContactFetch.dart';
 import 'package:flutter_chat_app/screens/notification.dart';
+import 'package:flutter_chat_app/screens/signin.dart';
+import 'package:flutter_chat_app/screens/signup.dart';
 
 void main() async{
   runApp(MyApp());
