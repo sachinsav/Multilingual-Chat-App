@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_chat_app/database.dart';
+import 'package:flutter_chat_app/provider/userprovider.dart';
 import 'package:flutter_chat_app/screens/chat_screen.dart';
+import 'package:flutter_chat_app/screens/login.dart';
 import 'package:flutter_chat_app/screens/profile.dart';
 import 'package:flutter_chat_app/screens/setting.dart';
 import 'package:flutter_chat_app/screens/notification.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:popup_menu/popup_menu.dart';
+import 'package:provider/provider.dart';
 class ContactsPage extends StatefulWidget {
   @override
   _ContactsPageState createState() => _ContactsPageState();
@@ -14,6 +18,7 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage> {
   var _contacts;
   final UserRepo dbmethode = new UserRepo();
+
   @override
   void initState() {
     getContacts();
@@ -36,6 +41,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
+    //final user = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: RichText(
@@ -117,6 +123,22 @@ class _ContactsPageState extends State<ContactsPage> {
           },
         ),
       ),
+      PopupMenuItem(
+        value: 3,
+        child: GestureDetector(
+          child: Row(
+            children: <Widget>[
+              Text("LogOut"),
+            ],
+          ),
+          onTap: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+            //TODO: LogOut function
+          },
+        ),
+      ),
     ],
   );
 
@@ -127,3 +149,4 @@ class _ContactsPageState extends State<ContactsPage> {
     return str.split(" ").map((st) => st[0].toUpperCase()+st.substring(1)).join(" ");
   }
 }
+
