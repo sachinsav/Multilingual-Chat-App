@@ -8,7 +8,7 @@ This is a Flutter application built to remove linguistic barriers while chatting
 
 SplashScreen Page | SignUp Page
 :---------:|:-----------:
-![](./github_images/splash.jpg)|![](./github_images/signup.jpg)
+![](./github_images/splash.jpg)|![](./github_images/register.jpg)
 
 ---
 
