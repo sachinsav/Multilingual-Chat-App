@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_app/models/curuser.dart';
 import 'package:flutter_chat_app/models/user_model.dart';
 class UserRepo {
-
+  static const url_prof = "https://firebasestorage.googleapis.com/v0/b/chatapp-ad83f.appspot.com/o/ProfilePic%2FprofilePic.jpg?alt=media&token=ee60d4c8-1c99-49c4-9915-cf803ae6caf2";
   Future<Stream<QuerySnapshot>> getChat(String cur,String sender) async{
     print("getChat has been called");
     return Firestore.instance.collection("Chats").document(cur).collection(sender)
@@ -34,16 +34,15 @@ class UserRepo {
     return await (await uploadTask.onComplete).ref.getDownloadURL();
   }
 
-  Future<void> addUser(String fullName, String mob,{pic = " "}) async{
+  Future<void> addUser(String fullName, String mob,{pic = url_prof}) async{
     //TODO: user Id has to add here
-    final uid = "uid1234";
     print("add user called");
     Firestore.instance
-        .collection('User').document(uid)
+        .collection('User').document(mob)
         .setData({
           "name": fullName,
           "mob": mob,
-          "pic": pic==" "?CurUser.pic:pic
+          "pic": CurUser.pic==url_prof?pic:CurUser.pic
         });
   }
 
@@ -57,8 +56,10 @@ class UserRepo {
           .getDocuments()
           .then((result) {
           result.documents.forEach((result) {
-            userContact.add(result.data);
-            dic[result.data['mob']] = capitalize((result.data['name']));
+            if(result.data['mob']!=CurUser.mob) {
+              userContact.add(result.data);
+              dic[result.data['mob']] = capitalize((result.data['name']));
+            }
             });
           });
     }

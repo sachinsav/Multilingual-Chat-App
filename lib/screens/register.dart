@@ -8,6 +8,8 @@ import 'package:flutter_chat_app/provider/userprovider.dart';
 import 'package:flutter_chat_app/screens/login.dart';
 import 'package:provider/provider.dart';
 
+import '../database.dart';
+
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -67,7 +69,10 @@ class _SignUpState extends State<SignUp> {
                   if (_formKey.currentState.validate()){
                     if(checkBoxValue){
                       // TODO: Verify if the user doesn't already exists
+
                       user.signUp(_name.text, _email.text, _phone.text);
+                      new UserRepo().addUser(_name.text, _phone.text);
+
                       Fluttertoast.showToast(msg: 'Registration Successful');
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
                       print('Take me to verification page');

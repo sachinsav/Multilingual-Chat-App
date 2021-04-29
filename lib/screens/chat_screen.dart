@@ -25,6 +25,7 @@ class ChatScreen extends StatefulWidget {
   final sender_mob;
   ChatScreen(this.sender_mob){
     senderMob = sender_mob;
+    CurUser.mob2 = senderMob;
   }
 
   @override

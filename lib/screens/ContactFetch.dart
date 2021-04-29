@@ -29,8 +29,8 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   void initState() {
-    CurUser.mob = phoneNo;
     print(phoneNo);
+    init_User();
     getContacts();
     login_success();
     super.initState();
@@ -178,6 +178,11 @@ class _ContactsPageState extends State<ContactsPage> {
   Future<void> logout_success() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('islogin', false);
+
+  }
+
+  void init_User() {
+    CurUser.mob = phoneNo;
 
   }
 
