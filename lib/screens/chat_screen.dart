@@ -55,12 +55,12 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  showAlertDialog(BuildContext context){
+  showAlertDialog(BuildContext context,String text){
     AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(),
-          Container(margin: EdgeInsets.only(left: 10),child:Text("Loading" )),
+          Container(margin: EdgeInsets.only(left: 10),child:Text(text)),
         ],),
     );
     showDialog(barrierDismissible: false,
@@ -210,7 +210,7 @@ class _ChatScreenState extends State<ChatScreen> {
             onTap: () async {
               //String trans_txt = await msg_obj.translate(to: 'en').toString();
               if (msg_obj.type == "img") {
-                showAlertDialog(context);
+                showAlertDialog(context,"Processing");
                 var file = await DefaultCacheManager().getSingleFile(msg_obj.text);
                 String img_msg = await parsethetext(file);
                 Navigator.pop(context);
@@ -485,11 +485,14 @@ class _ChatScreenState extends State<ChatScreen> {
         imageFile = File(picture.path);
       }
     });
-    Navigator.of(context).pop(true);
+
     if (picture != null) {
+      showAlertDialog(context, "Uploading Image Please Wait");
       String imageUrl = await dbmethod.uploadFile(imageFile);
       await dbmethod.addChat(
           CurUser.mob, CurUser.mob2, imageUrl, type: "img");
+      Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 
@@ -500,11 +503,15 @@ class _ChatScreenState extends State<ChatScreen> {
         imageFile = File(picture.path);
       }
     });
-    Navigator.of(context).pop(true);
+
+
     if (picture != null) {
+      showAlertDialog(context, "Uploading Image Please Wait");
       String imageUrl = await dbmethod.uploadFile(imageFile);
       await dbmethod.addChat(
           CurUser.mob, CurUser.mob2, imageUrl, type: "img");
+      Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 
