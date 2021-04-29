@@ -41,7 +41,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final user = Provider.of<UserProvider>(context);
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: RichText(
@@ -58,6 +58,13 @@ class _ContactsPageState extends State<ContactsPage> {
           ),
         ),
         actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.offline_bolt, color: Colors.white),
+              onPressed: () {
+                user.signOut();
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              }),
           IconButton(
             icon: _simplePopup(),
             color: Colors.white,
@@ -123,22 +130,22 @@ class _ContactsPageState extends State<ContactsPage> {
           },
         ),
       ),
-      PopupMenuItem(
-        value: 3,
-        child: GestureDetector(
-          child: Row(
-            children: <Widget>[
-              Text("LogOut"),
-            ],
-          ),
-          onTap: () async {
-            await FirebaseAuth.instance.signOut();
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-            //TODO: LogOut function
-          },
-        ),
-      ),
+      // PopupMenuItem(
+      //   value: 3,
+      //   child: GestureDetector(
+      //     child: Row(
+      //       children: <Widget>[
+      //         Text("LogOut"),
+      //       ],
+      //     ),
+      //     onTap: () async {
+      //       await FirebaseAuth.instance.signOut();
+      //       Navigator.pop(context);
+      //       Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+      //       //TODO: LogOut function
+      //     },
+      //   ),
+      // ),
     ],
   );
 
