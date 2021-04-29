@@ -222,8 +222,10 @@ class ProfileScreen extends State<Profile>{
 
                         });
                           if(imageFile!=null){
+                            showAlertDialog(context, "Uploading Profile Image");
                             String imageUrl = await dbmethod.uploadFile(imageFile,path: "ProfilePic");
                             dbmethod.addUser(nameTxt.text, mobTxt.text,pic: imageUrl);
+                            Navigator.pop(context);
                             setState(() {
                               CurUser.pic = imageUrl;
                               print("setState");
@@ -320,5 +322,21 @@ class ProfileScreen extends State<Profile>{
     });
     Navigator.of(context).pop(true);
 
+  }
+
+  showAlertDialog(BuildContext context,String text){
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(margin: EdgeInsets.only(left: 10),child:Text(text)),
+        ],),
+    );
+    showDialog(barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
+    );
   }
 }

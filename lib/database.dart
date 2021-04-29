@@ -59,6 +59,8 @@ class UserRepo {
             if(result.data['mob']!=CurUser.mob) {
               userContact.add(result.data);
               dic[result.data['mob']] = capitalize((result.data['name']));
+            }else{
+              CurUser.name = result.data['name'];
             }
             });
           });
