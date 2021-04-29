@@ -95,7 +95,7 @@ class _SignUpState extends State<SignUp> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       gradient: LinearGradient(
-                          colors: <Color>[Colors.teal[400], Colors.tealAccent]
+                          colors: <Color>[Colors.blueAccent, Colors.blue[200]]
                       )
                   ),
                   padding: const EdgeInsets.all(12.0),
@@ -123,13 +123,12 @@ class _SignUpState extends State<SignUp> {
         Opacity(
             opacity: 0.75,
           child: ClipPath(
-            //TODO: add clipper here
             clipper: CustomShapeClipper(),
             child: Container(
               height: _large ? _height/4 : (_medium ? _height/3.75 : _height/3.5),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal[400], Colors.tealAccent],
+                  colors: [Colors.blueAccent, Colors.blue[200]],
                 ),
               ),
             ),
@@ -139,13 +138,12 @@ class _SignUpState extends State<SignUp> {
         Opacity(
           opacity: 0.5,
           child: ClipPath(
-            //TODO: add clipper2 here
             clipper: CustomShapeClipper2(),
             child: Container(
               height: _large? _height/4.5 : (_medium? _height/4.25 : _height/4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal[400], Colors.tealAccent],
+                  colors: [Colors.blueAccent, Colors.blue[200]],
                 ),
               ),
             ),
@@ -168,23 +166,23 @@ class _SignUpState extends State<SignUp> {
             color: Colors.white,
             shape: BoxShape.circle
           ),
-           // child: Image.asset(
-           //   "assets/images/logo.jpg",
-           //   width: 250.0,
-           //   height: 200.0,
-           // ),
-          child: GestureDetector(
-            onTap: (){
-              //TODO: Adding a photo
-              print('Adding a Photo');
-              Fluttertoast.showToast(msg: 'Select a picture');
-            },
-            child: Icon(
-              Icons.add_a_photo,
-              size: _large? 40: (_medium? 33: 31),
-              color: Colors.black12,
-            ),
-          ),
+           child: Image.asset(
+             "assets/images/logoR.png",
+             width: 250.0,
+             height: 200.0,
+           ),
+          // child: GestureDetector(
+          //   onTap: (){
+          //     //TODO: Adding a photo
+          //     print('Adding a Photo');
+          //     Fluttertoast.showToast(msg: 'Select a picture');
+          //   },
+          //   child: Icon(
+          //     Icons.add_a_photo,
+          //     size: _large? 40: (_medium? 33: 31),
+          //     color: Colors.black12,
+          //   ),
+          // ),
         ),
       ],
     );
@@ -220,11 +218,11 @@ class _SignUpState extends State<SignUp> {
       child: TextFormField(
         controller: _name,
         keyboardType: TextInputType.text,
-        cursorColor: Colors.teal[200],
+        cursorColor: Colors.blueAccent,
         decoration: InputDecoration(
           prefixIcon: Icon(
               Icons.person,
-              color: Colors.teal[200],
+              color: Colors.blue[900],
               size: 20
           ),
           hintText: 'Full Name',
@@ -251,11 +249,11 @@ class _SignUpState extends State<SignUp> {
       child: TextFormField(
         controller: _email,
         keyboardType: TextInputType.emailAddress,
-        cursorColor: Colors.teal[200],
+        cursorColor: Colors.blueAccent,
         decoration: InputDecoration(
           prefixIcon: Icon(
               Icons.email,
-              color: Colors.teal[200],
+              color: Colors.blue[900],
               size: 20
           ),
           hintText: 'E-mail Address',
@@ -291,11 +289,11 @@ class _SignUpState extends State<SignUp> {
       child: TextFormField(
         controller: _phone,
         keyboardType: TextInputType.phone,
-        cursorColor: Colors.teal[200],
+        cursorColor: Colors.blueAccent,
         decoration: InputDecoration(
           prefixIcon: Icon(
               Icons.phone_android,
-              color: Colors.teal[200],
+              color: Colors.blue[900],
               size: 20
           ),
           hintText: 'Mobile Number',
@@ -329,7 +327,7 @@ class _SignUpState extends State<SignUp> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Checkbox(
-              activeColor: Colors.teal[400],
+              activeColor: Colors.blue[900],
               value: checkBoxValue,
               onChanged: (bool newValue){
                 setState(() {
@@ -421,7 +419,7 @@ class _SignUpState extends State<SignUp> {
             child: Text(
               "LogIn",
               style: TextStyle(
-                  fontWeight: FontWeight.w800, color: Colors.teal[200], fontSize: 17),
+                  fontWeight: FontWeight.w800, color: Colors.blue[900], fontSize: 17),
             ),
           )
         ],

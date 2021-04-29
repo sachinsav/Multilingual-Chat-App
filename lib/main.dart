@@ -16,7 +16,7 @@ void main() async{
       debugShowCheckedModeBanner: false,
       //title: 'All Chats',
       // theme: ThemeData(
-      //   primaryColor: Color(0xFF01afbd),
+        // primaryColor: Color(0xff01afbd),
       // ),
       home: Splash(),
     ),
