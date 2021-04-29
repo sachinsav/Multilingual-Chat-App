@@ -10,17 +10,18 @@ import 'package:provider/provider.dart';
 import 'Contact.dart';
 import 'ContactFetch.dart';
 
+String mobNo;
 class OTPScreen extends StatefulWidget {
-
   final String phoneNo;
   OTPScreen(this.phoneNo);
 
   @override
-  _OTPScreenState createState() => _OTPScreenState();
+  _OTPScreenState createState() => _OTPScreenState(phoneNo);
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-
+  String mob;
+  _OTPScreenState(this.mob);
   String _verificationCode;
 
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -103,7 +104,7 @@ class _OTPScreenState extends State<OTPScreen> {
                      user.authentiCated(authenticated);
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => ContactsPage()),
+                          MaterialPageRoute(builder: (context) => ContactsPage(mob)),
                               (route) => false);
                     }
                   }
@@ -146,7 +147,7 @@ class _OTPScreenState extends State<OTPScreen> {
               print('Authentication successful');
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => ContactsPage()),
+                  MaterialPageRoute(builder: (context) => ContactsPage(mob)),
                       (route) => false);
             }
           });
@@ -252,6 +253,7 @@ class _OTPScreenState extends State<OTPScreen> {
       ],
     );
   }
+
 
 }
 

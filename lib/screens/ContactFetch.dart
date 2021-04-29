@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_chat_app/database.dart';
+import 'package:flutter_chat_app/models/curuser.dart';
 import 'package:flutter_chat_app/provider/userprovider.dart';
 import 'package:flutter_chat_app/screens/chat_screen.dart';
 import 'package:flutter_chat_app/screens/login.dart';
@@ -10,18 +11,28 @@ import 'package:flutter_chat_app/screens/notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class ContactsPage extends StatefulWidget {
+  final String mob;
+  ContactsPage(this.mob) : super();
+
   @override
-  _ContactsPageState createState() => _ContactsPageState();
+  _ContactsPageState createState() => _ContactsPageState(mob);
 }
 
 class _ContactsPageState extends State<ContactsPage> {
   var _contacts;
+  String phoneNo;
+  _ContactsPageState(this.phoneNo);
   final UserRepo dbmethode = new UserRepo();
 
   @override
   void initState() {
+    CurUser.mob = phoneNo;
+    print(phoneNo);
     getContacts();
+    login_success();
     super.initState();
   }
 
@@ -62,8 +73,9 @@ class _ContactsPageState extends State<ContactsPage> {
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.offline_bolt, color: Colors.white),
-              onPressed: () {
+              onPressed: () async {
                 user.signOut();
+                await logout_success();
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               }),
@@ -157,5 +169,17 @@ class _ContactsPageState extends State<ContactsPage> {
     }
     return str.split(" ").map((st) => st[0].toUpperCase()+st.substring(1)).join(" ");
   }
+
+  Future<void> login_success() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('islogin', true);
+    prefs.setString('mob', phoneNo);
+  }
+  Future<void> logout_success() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('islogin', false);
+
+  }
+
 }
 

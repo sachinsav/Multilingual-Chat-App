@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: _height/14,),
 
                           Container(
-                            height: 40,
+                            height: 50,
                             constraints: const BoxConstraints(maxWidth: 500),
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 20,

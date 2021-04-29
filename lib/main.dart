@@ -18,7 +18,7 @@ void main() async{
       // theme: ThemeData(
       //   primaryColor: Color(0xFF01afbd),
       // ),
-      home: ScreenController(),
+      home: Splash(),
     ),
   )
   );
@@ -34,7 +34,7 @@ class ScreenController extends StatelessWidget {
       case Status.Uninitialized:
         return Splash();
       case Status.Authenticated:
-        return ContactsPage();
+        return ContactsPage("1234");//TODO: Not using thats why random value
       // case Status.Authenticating:
       //   return LoginScreen();
       case Status.Unauthenticated:

@@ -36,6 +36,7 @@ dependencies:
   pinput: ^0.2.0-dev.1
   splashscreen:
   fluttertoast:
+  shared_preferences: ^0.5.12+4
 
 dev_dependencies:
   flutter_test:
