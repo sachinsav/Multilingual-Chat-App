@@ -61,6 +61,7 @@ class UserRepo {
               dic[result.data['mob']] = capitalize((result.data['name']));
             }else{
               CurUser.name = result.data['name'];
+              CurUser.pic = result.data['pic'];
             }
             });
           });
