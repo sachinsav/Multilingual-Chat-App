@@ -25,6 +25,7 @@ class _ContactsPageState extends State<ContactsPage> {
     super.initState();
   }
 
+  //getting contacts from phonebook
   Future<void> getContacts() async {
     final Iterable<Contact> contacts = await ContactsService.getContacts();
     await FbNotification().initialise();
@@ -33,6 +34,7 @@ class _ContactsPageState extends State<ContactsPage> {
       String mob = e.phones.toList()[0].value.replaceAll(new RegExp(r'\D'), "");
       mobLst.add(mob);
     }
+    //get matchiing data from firebase
     var userContact = await dbmethode.getMob(mobLst);
     setState(() {
       _contacts = userContact;
@@ -41,7 +43,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final user = Provider.of<UserProvider>(context);
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: RichText(
@@ -58,6 +60,13 @@ class _ContactsPageState extends State<ContactsPage> {
           ),
         ),
         actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.offline_bolt, color: Colors.white),
+              onPressed: () {
+                user.signOut();
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              }),
           IconButton(
             icon: _simplePopup(),
             color: Colors.white,
@@ -123,22 +132,22 @@ class _ContactsPageState extends State<ContactsPage> {
           },
         ),
       ),
-      PopupMenuItem(
-        value: 3,
-        child: GestureDetector(
-          child: Row(
-            children: <Widget>[
-              Text("LogOut"),
-            ],
-          ),
-          onTap: () async {
-            await FirebaseAuth.instance.signOut();
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-            //TODO: LogOut function
-          },
-        ),
-      ),
+      // PopupMenuItem(
+      //   value: 3,
+      //   child: GestureDetector(
+      //     child: Row(
+      //       children: <Widget>[
+      //         Text("LogOut"),
+      //       ],
+      //     ),
+      //     onTap: () async {
+      //       await FirebaseAuth.instance.signOut();
+      //       Navigator.pop(context);
+      //       Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+      //       //TODO: LogOut function
+      //     },
+      //   ),
+      // ),
     ],
   );
 
