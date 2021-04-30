@@ -21,13 +21,13 @@ class Splash extends StatelessWidget {
         navigateAfterSeconds: islogin ? ContactsPage(phoneNo) :SignUp(),
         title: new Text('Wait a moment...',textScaleFactor: 1,),
         image: Image.asset(
-          'assets/images/logo.jpg',
+          'assets/images/logoR.png',
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
         ),
         loadingText: Text("Loading"),
-        photoSize: 185.0,
-        loaderColor: Colors.teal,
+        photoSize: 160.0,
+        loaderColor: Colors.blue[200],
       ),
     );
   }

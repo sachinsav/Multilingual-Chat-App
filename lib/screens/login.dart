@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 10),
                         child: const Text('Get Verified',
                           style: TextStyle(
-                              color: Colors.teal,
+                              color: Colors.blueAccent,
                               fontSize: 30,
                               fontWeight: FontWeight.w800
                           ),
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(fontSize: 18),
                               maxLength: 10,
                               placeholder: 'Enter your Number',
-                              placeholderStyle: TextStyle(color: Colors.teal),
+                              placeholderStyle: TextStyle(color: Colors.blueAccent),
                               prefix: Padding(
                                 padding: EdgeInsets.all(4),
                                 child: Text(
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             constraints: const BoxConstraints(maxWidth: 500),
                             child: RaisedButton(
-                              color: Colors.teal,
+                              color: Colors.blueAccent,
                               onPressed: () {
                                 // TODO: Check whether number is registered in database
                                 if (phoneController.text.length == 10) {
@@ -251,7 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: _large ? _height/4 : (_medium ? _height/3.75 : _height/3.5),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal[400], Colors.tealAccent],
+                  colors: [Colors.blueAccent, Colors.blue[200]],
                 ),
               ),
             ),
@@ -266,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: _large? _height/4.5 : (_medium? _height/4.25 : _height/4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal[400], Colors.tealAccent],
+                  colors: [Colors.blueAccent, Colors.blue[200]],
                 ),
               ),
             ),
@@ -274,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
 
         Container(
-          height: _height / 4,
+          height: _height / 5,
           margin: EdgeInsets.only(top: _large? _height/25 : (_medium? _height/17 : _height/12.5)),
           alignment: Alignment.center,
           decoration: BoxDecoration(

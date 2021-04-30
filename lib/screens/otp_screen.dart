@@ -80,15 +80,15 @@ class _OTPScreenState extends State<OTPScreen> {
               focusNode: _pinPutFocusNode,
               controller: _pinPutController,
               submittedFieldDecoration: BoxDecoration(
-                  color: Colors.teal,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(5)
               ),
               selectedFieldDecoration: BoxDecoration(
-                  color: Colors.teal,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(5)
               ),
               followingFieldDecoration: BoxDecoration(
-                  color: Colors.teal,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(5)
               ),
               pinAnimationType: PinAnimationType.fade,
@@ -182,13 +182,12 @@ class _OTPScreenState extends State<OTPScreen> {
         Opacity(
           opacity: 0.75,
           child: ClipPath(
-            //TODO: add clipper here
             clipper: CustomShapeClipper(),
             child: Container(
               height: _large ? _height/4 : (_medium ? _height/3.75 : _height/3.5),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal[400], Colors.tealAccent],
+                  colors: [Colors.blueAccent, Colors.blue[200]],
                 ),
               ),
             ),
@@ -198,13 +197,12 @@ class _OTPScreenState extends State<OTPScreen> {
         Opacity(
           opacity: 0.5,
           child: ClipPath(
-            //TODO: add clipper2 here
             clipper: CustomShapeClipper2(),
             child: Container(
               height: _large? _height/4.5 : (_medium? _height/4.25 : _height/4),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.teal[400], Colors.tealAccent],
+                  colors: [Colors.blueAccent, Colors.blue[200]],
                 ),
               ),
             ),
