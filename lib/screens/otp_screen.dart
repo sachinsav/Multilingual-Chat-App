@@ -238,7 +238,7 @@ class _OTPScreenState extends State<OTPScreen> {
         //   // ),
         //   // child: GestureDetector(
         //   //   onTap: (){
-        //   //     //TODO: Adding a photo
+        //   //     //Adding a photo
         //   //     print('Adding a Photo');
         //   //   },
         //   //   child: Icon(

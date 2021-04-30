@@ -9,7 +9,6 @@ class UserServices {
   String collection = 'users';
 
   void createUser(Map data){
-    // TODO: Verify if the user doesn't already exists
    // _firebaseDatabase.reference().child(child).push().set(data);
     _firestore.collection(collection).document(data['phoneNo']).setData(data);
   }

@@ -304,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
          // ),
           // child: GestureDetector(
           //   onTap: (){
-          //     //TODO: Adding a photo
+          //     //Adding a photo
           //     print('Adding a Photo');
           //   },
           //   child: Icon(

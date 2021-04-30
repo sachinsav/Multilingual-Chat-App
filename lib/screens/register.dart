@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUp> {
   double _pixelRatio;
   bool _large;
   bool _medium;
-
+  UserRepo db = new UserRepo();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final _key = GlobalKey<ScaffoldState>();
@@ -65,17 +65,21 @@ class _SignUpState extends State<SignUp> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
-                onPressed: (){
+                onPressed: () async {
                   if (_formKey.currentState.validate()){
                     if(checkBoxValue){
-                      // TODO: Verify if the user doesn't already exists
+                      bool isregister = await db.checkRegister(_phone.text);
+                      if(!isregister) {
+                        user.signUp(_name.text, _email.text, _phone.text);
+                        new UserRepo().addUser(_name.text, _phone.text);
 
-                      user.signUp(_name.text, _email.text, _phone.text);
-                      new UserRepo().addUser(_name.text, _phone.text);
-
-                      Fluttertoast.showToast(msg: 'Registration Successful');
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
-                      print('Take me to verification page');
+                        Fluttertoast.showToast(msg: 'Registration Successful');
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LoginScreen()));
+                        print('Take me to verification page');
+                      }else{
+                      Fluttertoast.showToast(msg: 'Given Number is already registered');
+                    }
                     }
                     else{
                       Fluttertoast.showToast(msg: 'Accept Terms & Conditions');
@@ -358,7 +362,7 @@ class _SignUpState extends State<SignUp> {
   //     onPressed: (){
   //       if (_formKey.currentState.validate()){
   //         if(checkBoxValue){
-  //           // TODO: Verify if the user doesn't already exists
+  //
   //           user.signUp(_name.text, _email.text, _phone.text);
   //           Fluttertoast.showToast(msg: 'Registration Successful');
   //           Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));

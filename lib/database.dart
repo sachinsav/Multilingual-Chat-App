@@ -35,7 +35,6 @@ class UserRepo {
   }
 
   Future<void> addUser(String fullName, String mob,{pic = url_prof}) async{
-    //TODO: user Id has to add here
     print("add user called");
     Firestore.instance
         .collection('User').document(mob)
