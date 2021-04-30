@@ -70,6 +70,19 @@ class UserRepo {
     return userContact;
   }
 
+  Future<bool> checkRegister(String mob) async{
+    bool ans=false;
+      await Firestore.instance.collection('User')
+          .where('mob', isEqualTo: mob)
+          .getDocuments()
+          .then((result) {
+        result.documents.forEach((result) {
+          ans = true;
+        });
+      });
+    return ans;
+  }
+
   String capitalize(String str) {
     if (str.length<2){
       return str.toUpperCase();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_chat_app/database.dart';
 import 'package:flutter_chat_app/models/customShape.dart';
 import 'package:flutter_chat_app/models/responsive_ui.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   double _pixelRatio;
   bool _large;
   bool _medium;
-
+  UserRepo db;
   @override
   Widget build(BuildContext context) {
 
@@ -28,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large =  ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
     _medium =  ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
-
+    db = new UserRepo();
      return Scaffold(
        backgroundColor: Colors.white,
        body: SingleChildScrollView(
@@ -147,9 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             constraints: const BoxConstraints(maxWidth: 500),
                             child: RaisedButton(
                               color: Colors.blueAccent,
-                              onPressed: () {
-                                // TODO: Check whether number is registered in database
-                                if (phoneController.text.length == 10) {
+                              onPressed: () async {
+                                bool isregister = await db.checkRegister(phoneController.text);
+
+                                if ( isregister && phoneController.text.length == 10) {
                                   print('Routing to otpScreen');
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
@@ -165,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: Text(
-                                            'Please enter a valid number',
+                                            'Please enter a valid and registered number',
                                             style: TextStyle(fontSize: 18),
                                           ),
                                           actions: [
@@ -295,8 +297,8 @@ class _LoginScreenState extends State<LoginScreen> {
               margin: const EdgeInsets.symmetric(
                   horizontal: 8),
               child: Image.asset(
-                'assets/images/1.png',
-                color: Colors.black38,
+                'assets/images/logoR.png',
+
               ),
             ),
          // ),
@@ -315,4 +317,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
+
+
 }

@@ -23,7 +23,7 @@ class ProfileScreen extends State<Profile>{
   var mobTxt = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
+
     nameTxt.text = CurUser.name;
     mobTxt.text = CurUser.mob;
     super.initState();
@@ -270,9 +270,6 @@ class ProfileScreen extends State<Profile>{
     );
   }
 
-  void addTofb(String text) {
-    //TODO: add name to firebase
-  }
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(
         context: context,

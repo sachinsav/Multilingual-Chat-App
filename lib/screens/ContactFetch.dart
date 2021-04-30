@@ -156,7 +156,7 @@ class _ContactsPageState extends State<ContactsPage> {
       //       await FirebaseAuth.instance.signOut();
       //       Navigator.pop(context);
       //       Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-      //       //TODO: LogOut function
+      //       //Logout Function
       //     },
       //   ),
       // ),
@@ -180,10 +180,15 @@ class _ContactsPageState extends State<ContactsPage> {
     prefs.setBool('islogin', false);
 
   }
+  Future<void> getLanguageFromLocalStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    CurUser.lang = prefs.getString('cur_lang');
+    CurUser.language = prefs.getString('cur_language');
+  }
 
   void init_User() {
     CurUser.mob = phoneNo;
-
+    getLanguageFromLocalStorage();
   }
 
 }

@@ -539,7 +539,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var temp_str;
     try {
       temp_str = result['ParsedResults'][0]['ParsedText'];
-      temp_str = await trans(temp_str, codes[cur_lang]);
+      temp_str = await trans(temp_str, codes[CurUser.language]);
     }catch(error){
       print(error);
       temp_str = "Image does not contain any text";

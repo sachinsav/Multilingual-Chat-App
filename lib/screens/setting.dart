@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter_chat_app/Language.dart';
 import 'package:flutter_chat_app/models/curuser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Setting extends StatelessWidget {
   @override
@@ -57,11 +58,14 @@ class Setting extends StatelessWidget {
         Container(
           child: DropDownField(
             controller: lang_selected,
-            hintText: "Choose Prefered Language",
+            hintText: "Choose Prefered Language(eg. "+CurUser.language+")",
             enabled: true,
             items: st,
             onValueChanged: (value) {
+              print(value);
+              CurUser.language = value;
               CurUser.lang = codes[value];
+              saveLanguageToLocalStorage();
             },
           ),
         ),
@@ -69,8 +73,13 @@ class Setting extends StatelessWidget {
       ]),
     );
   }
+
+  Future<void> saveLanguageToLocalStorage() async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('cur_lang', CurUser.lang);
+      prefs.setString('cur_language', CurUser.language);
+  }
 }
 
-String cur_lang = "Hindi";
 final lang_selected = TextEditingController();
 List<String> st = codes.keys.toList();
