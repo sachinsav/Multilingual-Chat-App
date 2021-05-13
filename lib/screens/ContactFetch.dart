@@ -167,8 +167,14 @@ class _ContactsPageState extends State<ContactsPage> {
     if (str.length<2){
       return str.toUpperCase();
     }
+
+    try {
+      return str.split(" ")
+          .map((st) => st[0].toUpperCase() + st.substring(1))
+          .join(" ");
+    }catch(Exception){
     return str;
-    return str.split(" ").map((st) => st[0].toUpperCase()+st.substring(1)).join(" ");
+    }
   }
 
   Future<void> login_success() async {
