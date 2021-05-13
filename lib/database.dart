@@ -86,6 +86,7 @@ class UserRepo {
     if (str.length<2){
       return str.toUpperCase();
     }
+    return str;
     return str.split(" ").map((st) => st[0].toUpperCase()+st.substring(1)).join(" ");
   }
 }
